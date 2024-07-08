@@ -1,33 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const board = document.querySelector('.board');
     const rollDiceButton = document.getElementById('rollDice');
-    const diceResult = document.getElementById('diceResult');
-    const playerInfo = document.getElementById('playerInfo');
-
-    function createBoard() {
-        for (let i = 100; i > 0; i--) {
-            const cell = document.createElement('div');
-            cell.textContent = i;
-            board.appendChild(cell);
-        }
-    }
-
-    createBoard();
-
-    rollDiceButton.addEventListener('click', () => {
-        const result = Math.floor(Math.random() * 6) + 1;
-        diceResult.textContent = `Dice Result: ${result}`;
-    });
-
-    AOS.init();
-    VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
-        max: 25,
-        speed: 400
-    });
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const board = document.querySelector('.board');
-    const rollDiceButton = document.getElementById('rollDice');
+    const resetGameButton = document.getElementById('resetGame');
     const diceResult = document.getElementById('diceResult');
     const playerInfo = document.getElementById('playerInfo');
 
@@ -81,6 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const newCell = document.querySelector(`#cell-${playerPosition}`);
         newCell.classList.add('player');
         playerInfo.textContent = `Player Position: ${playerPosition}`;
+
+        if (playerPosition === 100) {
+            alert('Congratulations! You have won the game!');
+            rollDiceButton.disabled = true;
+        }
     }
 
     rollDiceButton.addEventListener('click', () => {
@@ -91,6 +70,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (newPosition > 100) newPosition = 100;
 
         movePlayer(newPosition);
+    });
+
+    resetGameButton.addEventListener('click', () => {
+        playerPosition = 1;
+        diceResult.textContent = '';
+        playerInfo.textContent = `Player Position: ${playerPosition}`;
+        document.querySelectorAll('.board div').forEach(cell => cell.classList.remove('player'));
+        movePlayer(playerPosition);
+        rollDiceButton.disabled = false;
     });
 
     createBoard();
